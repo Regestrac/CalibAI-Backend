@@ -6,8 +6,8 @@ redis.on("connect", () => {
   console.log("Redis connected");
 });
 
-redis.on("error", () => {
-  console.log("Redis error");
+redis.on("error", (error) => {
+  console.log("Redis error", error);
 });
 
 export default redis;
