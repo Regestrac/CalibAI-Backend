@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import { getAuth } from 'firebase-admin/auth';
 import { app } from '../config/firebase.js';
 import User from '../models/user.model.js';
@@ -29,9 +30,8 @@ export const login = async (req, res) => {
         email: user.email,
         avatarUrl: user.avatarUrl,
       }),
-      {
-        EX: 60 * 60 * 24 * 7,
-      }
+      'EX',
+      60 * 60 * 24 * 7
     );
 
     res.cookie("session", sessionId, {
