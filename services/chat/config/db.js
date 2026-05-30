@@ -3,9 +3,9 @@ import mongoose from "mongoose"
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_DB_URI);
-    console.log("Auth DB connected");
+    console.log("Chat DB connected");
   } catch (error) {
-    console.log(`Auth DB error: ${error}`);
+    console.log(`Chat DB error: ${error}`);
   }
 }
 

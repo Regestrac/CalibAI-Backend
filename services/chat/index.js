@@ -1,13 +1,19 @@
 import express from 'express';
+import connectDB from './config/db.js';
+import dns from 'dns';
+
+dns.setServers(['8.8.8.8', '1.1.1.1']);
 
 const PORT = process.env.PORT;
 
-const app = express()
+const app = express();
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Hello from Chat" });
-})
+});
 
 app.listen(PORT, () => {
-  console.log(`Chat started on port: ${PORT}`)
-})
+  console.log(`Chat started on port: ${PORT}`);
+
+  connectDB();
+});
