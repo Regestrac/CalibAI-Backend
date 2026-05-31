@@ -1,4 +1,5 @@
 import Conversation from "../models/conversation.model.js";
+import Message from "../models/message.model.js";
 
 export const createConversation = async (req, res) => {
   try {
@@ -38,5 +39,21 @@ export const updateConversation = async (req, res) => {
     return res.status(200).json(conversation);
   } catch (error) {
     return res.status(500).json({ message: `Update conversation error: ${error}` });
+  }
+};
+
+export const saveMessage = async (req, res) => {
+  try {
+    const { conversationId, role, content } = req.body;
+
+    const message = Message.create({
+      conversationId,
+      role,
+      content
+    });
+
+    return res.status(200).json(message);
+  } catch (error) {
+    return res.status(500).json({ message: `Save message error: ${error}` });
   }
 };
