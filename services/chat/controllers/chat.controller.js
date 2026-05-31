@@ -28,3 +28,15 @@ export const getConversations = async (req, res) => {
     return res.status(500).json({ message: `Get conversations error: ${error}` });
   }
 };
+
+export const updateConversation = async (req, res) => {
+  try {
+    const { id, title } = req.body;
+
+    const conversation = await Conversation.findByIdAndUpdate(id, { title });
+
+    return res.status(200).json(conversation);
+  } catch (error) {
+    return res.status(500).json({ message: `Update conversation error: ${error}` });
+  }
+};
