@@ -6,8 +6,6 @@ export const agent = async (req, res) => {
   try {
     const { prompt, conversationId } = req.body;
 
-    await updateMemory(conversationId, "user", prompt);
-
     await axios.post(`${process.env.CHAT_SERVICE}/save-message`, {
       conversationId,
       content: prompt,
@@ -21,6 +19,7 @@ export const agent = async (req, res) => {
 
     const response = result?.aiResponse;
 
+    await updateMemory(conversationId, "user", prompt);
     await updateMemory(conversationId, "assistant", response);
 
     await axios.post(`${process.env.CHAT_SERVICE}/save-message`, {
