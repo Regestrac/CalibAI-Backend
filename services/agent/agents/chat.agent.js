@@ -1,7 +1,11 @@
+import { AIMessage, HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { getModel } from "../config/llmModels.js";
+import { getMemory } from "../config/memory.js";
 
 export const chatAgent = async (state) => {
   const llm = await getModel("chat");
+
+  const history = await getMemory(state?.conversationId);
 
   const systemPrompt = `
     You are CalibAI, a friendly, precise, and helpful AI assistant.
@@ -16,16 +20,15 @@ export const chatAgent = async (state) => {
     You have access to conversation history for context unless this is the first message.
   `
 
-  const response = await llm.invoke([
-    {
-      "role": "system",
-      "content": systemPrompt,
-    },
-    {
-      "role": "human",
-      "content": state?.prompt,
-    }
-  ]);
+  const messages = [new SystemMessage(systemPrompt)];
+
+  history?.forEach(({ role, content }) => {
+    messages.push(role === 'user' ? new HumanMessage(content) : new AIMessage(content));
+  });
+
+  messages.push(new HumanMessage(state?.prompt));
+
+  const response = await llm.invoke(messages);
 
   return {
     ...state,
