@@ -25,6 +25,7 @@ export const agent = async (req, res) => {
       conversationId,
       content: response,
       role: "assistant",
+      images: result?.images,
     });
 
     return res.status(200).json({
