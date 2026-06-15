@@ -18,10 +18,8 @@ export const agent = async (req, res) => {
       agent,
     });
 
-    const response = result?.aiResponse;
-
     await updateMemory(conversationId, "user", prompt);
-    await updateMemory(conversationId, "assistant", response);
+    await updateMemory(conversationId, "assistant", result?.aiResponse);
 
     await axios.post(`${process.env.CHAT_SERVICE}/save-message`, {
       conversationId,
@@ -29,7 +27,11 @@ export const agent = async (req, res) => {
       role: "assistant",
     });
 
-    return res.status(200).json({ message: "Agent response", data: response });
+    return res.status(200).json({
+      message: "Agent response",
+      data: result?.aiResponse,
+      images: result?.images,
+    });
 
   } catch (error) {
     return res.status(500).json({
