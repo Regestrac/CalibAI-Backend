@@ -7,8 +7,20 @@ export const chatAgent = async (state) => {
 
   const history = await getMemory(state?.conversationId);
 
+  const searchContext = state?.searchResults ? `
+    Web Search Results:
+    ${JSON.stringify(state.searchResults)}
+
+    Answer the user using only the above search results.
+  ` : ""
+
   const systemPrompt = `
     You are CalibAI, a friendly, precise, and helpful AI assistant.
+
+    ${searchContext}
+    If search context exists:
+    - Use search results to answer.
+    - Do not mention internal tools.
 
     Core principles:
     - Be concise: 2-10 sentences, max 300 words.
