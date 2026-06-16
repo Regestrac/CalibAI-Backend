@@ -32,6 +32,7 @@ export const agent = async (req, res) => {
       message: "Agent response",
       data: result?.aiResponse,
       images: result?.images,
+      artifacts: result?.artifacts,
     });
 
   } catch (error) {
