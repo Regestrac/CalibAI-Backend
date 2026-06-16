@@ -26,6 +26,7 @@ export const agent = async (req, res) => {
       content: result?.aiResponse,
       role: "assistant",
       images: result?.images,
+      artifacts: result?.artifacts,
     });
 
     return res.status(200).json({
