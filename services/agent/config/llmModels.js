@@ -10,9 +10,10 @@ const compound = new ChatGroq({
 });
 
 const openRouter = new ChatOpenRouter({
-  model: "deepseek/deepseek-chat",
-  temperature: 0,
-  maxTokens: 2500,
+  // model: "deepseek/deepseek-chat",
+  model: "z-ai/glm-5.2:free",
+  // temperature: 0,
+  // maxTokens: 2500,
 })
 
 export const getModel = async (agent) => {
