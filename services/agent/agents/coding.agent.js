@@ -5,9 +5,8 @@ export const codingAgent = async (state) => {
   const codingLlm = await getModel("coding");
 
   const intentResponse = await intentLlm.invoke(`
-    You are an intent classifier.
-    
-    Return ONLY one of these values without any explanation, thought process or extra text:
+    You are an intent classifier. Your sole responsibility is to analyze the user's request and classify it into exactly one of the following categories:
+
     - CODE_GENERATION
     - CODE_REVIEW
     - CODE_EXPLANATION
@@ -15,6 +14,14 @@ export const codingAgent = async (state) => {
     - OPTIMIZATION
     - CONVERSION
     - DOCUMENTATION
+
+    CRITICAL INSTRUCTIONS:
+    1. Output ONLY the category name in ALL CAPS
+    2. Do NOT include any additional text, explanations, punctuation, or formatting
+    3. Do NOT prefix with "Intent:" or any other label
+    4. Do NOT wrap in quotes or backticks
+    5. Do NOT provide reasoning or thought process
+    6. Your response must consist of a single word from the list above and nothing else
 
     User Request: ${state?.prompt}
   `);
