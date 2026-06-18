@@ -11,7 +11,8 @@ const compound = new ChatGroq({
 
 const openRouter = new ChatOpenRouter({
   // model: "deepseek/deepseek-chat",
-  model: "z-ai/glm-5.2:free",
+  // model: "z-ai/glm-5.2:free",
+  model: "nvidia/nemotron-3-ultra-550b-a55b:free",
   // temperature: 0,
   // maxTokens: 2500,
 })
