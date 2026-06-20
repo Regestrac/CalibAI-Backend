@@ -1,3 +1,4 @@
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { b2 } from "../config/b2.js";
 
 export const uploadToB2 = async (fileName, buffer, contentType) => {
