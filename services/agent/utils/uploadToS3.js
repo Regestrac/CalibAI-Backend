@@ -1,0 +1,14 @@
+import { s3 } from "../config/s3.js";
+
+export const uploadToB2 = async (fileName, buffer, contentType) => {
+  await s3.send(
+    new PutObjectCommand({
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: fileName,
+      Body: buffer,
+      ContentType: contentType,
+    })
+  );
+
+  return fileName;
+}
