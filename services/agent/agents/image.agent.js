@@ -49,7 +49,7 @@ export const imageAgent = async (state) => {
       
       🔗 [Download Image](${downloadUrl})
       
-      ⏳ Link expires in 24 hours.`,
+      ⏳ Link expires in 24 hours.`.replaceAll("\n      \n      ", "\n\n"),
     }
   } catch (error) {
     console.log("Error:", error);
