@@ -20,9 +20,9 @@ export const updateMemory = async (conversationId, role, content) => {
   const key = `messages-${conversationId}`;
 
   const rawMessages = await redis.get(key);
-  const messages = rawMessages ? JSON.parse(rawMessages) : [];
+  const messages = rawMessages ? JSON.parse(rawMessages) ?? [] : [];
 
-  messages.push({ role, content });
+  messages?.push({ role, content });
 
   if (messages.length > 20) {
     messages.shift();
