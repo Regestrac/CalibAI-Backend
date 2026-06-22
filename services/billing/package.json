@@ -10,6 +10,7 @@
   "type": "module",
   "dependencies": {
     "express": "^5.2.1",
-    "mongoose": "^9.9.3"
+    "mongoose": "^9.9.3",
+    "razorpay": "^2.9.8"
   }
 }
