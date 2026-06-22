@@ -20,18 +20,6 @@ const addCoverPage = (ppt, data) => {
     color: COLORS.primary,
   }
 
-  slide.addShape(
-    ppt.ShapeType.rect,
-    {
-      x: 0,
-      y: 0,
-      w: 13.33,
-      h: 0.18,
-      fill: { color: COLORS.fill },
-      line: { color: COLORS.fill },
-    }
-  );
-
   slide.addText(
     data?.title,
     {
@@ -117,54 +105,41 @@ const addContentSlide = (ppt, title, points, page, length) => {
     }
   );
 
-  // points?.forEach((point, index) => {
-  //   const y = 1.2 + index * 0.75
-  //   slide.addShape(
-  //     ppt.ShapeType.round1Rect,
-  //     {
-  //       x: 0.7,
-  //       y,
-  //       w: 12,
-  //       h: 0.58,
-  //       fill: { color: index % 2 ? "F8FAFC" : "EFF6FF" },
-  //       line: { color: COLORS.border },
-  //       rectRadius: 0.08
-  //     }
-  //   )
-  //   slide.addShape(ppt.ShapeType.ellipse, {
-  //     x: 0.92,
-  //     y: y + 0.18,
-  //     w: 0.12,
-  //     h: 0.12,
-  //     fill: { color: COLORS.primary },
-  //     line: { color: COLORS.primary },
-  //   })
-  //   slide.addText(
-  //     point,
-  //     {
-  //       x: 1.2,
-  //       y: y + 0.08,
-  //       w: 11,
-  //       h: 0.35,
-  //       fontSize: 15,
-  //       color: COLORS.text,
-  //       fit: "shrink",
-  //     }
-  //   );
-  // })
-
-  slide.addText(
-    points?.map((point) => ({ text: point, options: { bullet: true, indent: 0.3 } })),
-    {
-      x: 0.7,
-      y: 3.5,
-      w: 12,
-      h: 3,
-      fontSize: 14,
-      color: COLORS.text,
-      lineSpacing: 25,
-    }
-  );
+  points?.forEach((point, index) => {
+    const y = 1.2 + index * 0.75
+    slide.addShape(
+      ppt.ShapeType.round1Rect,
+      {
+        x: 0.7,
+        y,
+        w: 12,
+        h: 0.58,
+        fill: { color: index % 2 ? "F8FAFC" : "EFF6FF" },
+        line: { color: COLORS.border },
+        rectRadius: 0.08
+      }
+    )
+    slide.addShape(ppt.ShapeType.ellipse, {
+      x: 0.92,
+      y: y + 0.18,
+      w: 0.12,
+      h: 0.12,
+      fill: { color: COLORS.primary },
+      line: { color: COLORS.primary },
+    })
+    slide.addText(
+      point,
+      {
+        x: 1.2,
+        y: y + 0.08,
+        w: 11,
+        h: 0.35,
+        fontSize: 15,
+        color: COLORS.text,
+        fit: "shrink",
+      }
+    );
+  })
 
   slide.addText(
     `${page}/${length}`,
@@ -196,17 +171,6 @@ const addThankYou = (ppt) => {
 
   slide.background = { color: COLORS.secondary };
 
-  // slide.addShape(
-  //   ppt.ShapeType.rect,
-  //   {
-  //     x: 0,
-  //     y: 0,
-  //     w: 13.33,
-  //     h: 0.18,
-  //     fill: { color: COLORS.fill },
-  //     line: { color: COLORS.fill },
-  //   }
-  // );
   slide.addText(
     "Thank You",
     {
@@ -246,7 +210,6 @@ export const generatePpt = async (data) => {
   ppt.theme = {
     headFontFace: "Aptos",
     bodyFontFace: "Aptos",
-    lang: "en-US",
   }
 
   addCoverPage(ppt, data);
