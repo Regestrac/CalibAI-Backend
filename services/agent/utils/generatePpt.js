@@ -1,23 +1,85 @@
 import pptxgen from 'pptxgenjs';
 
-const COLORS = {
-  primary: "2563EB",
-  secondary: "0F172A",
-  text: "334155",
-  light: "F8FAFC",
-  border: "E2E8F0",
-  white: "FFFFFF",
-  muted: "647488",
-  fill: "60A5FA",
-  subtitle: "DBEAFE",
-  blue: "BFDBFE"
+const THEMES = {
+  blue: {
+    primary: "2563EB",
+    secondary: "0F172A",
+    text: "334155",
+    light: "F8FAFC",
+    border: "E2E8F0",
+    muted: "647488",
+    fill: "60A5FA",
+    subtitle: "DBEAFE",
+    accent: "BFDBFE"
+  },
+  red: {
+    primary: "DC2626",
+    secondary: "1C1917",
+    text: "334155",
+    light: "F8FAFC",
+    border: "E2E8F0",
+    muted: "647488",
+    fill: "F87171",
+    subtitle: "FEE2E2",
+    accent: "FECACA"
+  },
+  green: {
+    primary: "16A34A",
+    secondary: "0F172A",
+    text: "334155",
+    light: "F8FAFC",
+    border: "E2E8F0",
+    muted: "647488",
+    fill: "4ADE80",
+    subtitle: "DCFCE7",
+    accent: "BBF7D0"
+  },
+  yellow: {
+    primary: "CA8A04",
+    secondary: "1C1917",
+    text: "334155",
+    light: "F8FAFC",
+    border: "E2E8F0",
+    muted: "647488",
+    fill: "FACC15",
+    subtitle: "FEF9C3",
+    accent: "FEF08A"
+  },
+  purple: {
+    primary: "9333EA",
+    secondary: "1C1917",
+    text: "334155",
+    light: "F8FAFC",
+    border: "E2E8F0",
+    muted: "647488",
+    fill: "C084FC",
+    subtitle: "F3E8FF",
+    accent: "E9D5FF"
+  },
+  black: {
+    primary: "18181B",
+    secondary: "09090B",
+    text: "334155",
+    light: "F8FAFC",
+    border: "E2E8F0",
+    muted: "647488",
+    fill: "52525B",
+    subtitle: "F4F4F5",
+    accent: "E4E4E7"
+  }
 };
 
-const addCoverPage = (ppt, data) => {
+const getRandomTheme = () => {
+  const themeKeys = Object.keys(THEMES);
+  const randomKey = themeKeys[Math.floor(Math.random() * themeKeys.length)];
+  return THEMES[randomKey];
+};
+
+const addCoverPage = (ppt, data, colors) => {
   const slide = ppt.addSlide();
 
   slide.background = {
-    color: COLORS.primary,
+    color: colors.primary,
   }
 
   slide.addText(
@@ -28,7 +90,7 @@ const addCoverPage = (ppt, data) => {
       w: 12,
       h: 0.8,
       fontSize: 28,
-      color: COLORS.white,
+      color: colors.light,
       bold: true,
       align: "center"
     }
@@ -42,7 +104,7 @@ const addCoverPage = (ppt, data) => {
       w: 11.5,
       h: 0.4,
       fontSize: 15,
-      color: COLORS.subtitle,
+      color: colors.subtitle,
       align: "center"
     }
   );
@@ -55,17 +117,17 @@ const addCoverPage = (ppt, data) => {
       w: 13.33,
       h: 0.2,
       fontSize: 10,
-      color: COLORS.blue,
+      color: colors.accent,
       align: "center"
     }
   );
 }
 
-const addContentSlide = (ppt, title, points, page, length) => {
+const addContentSlide = (ppt, title, points, page, length, colors) => {
   const slide = ppt.addSlide();
 
   slide.background = {
-    color: COLORS.white,
+    color: colors.light,
   }
 
   slide.addShape(
@@ -75,8 +137,8 @@ const addContentSlide = (ppt, title, points, page, length) => {
       y: 0,
       w: 13.33,
       h: 0.18,
-      fill: { color: COLORS.fill },
-      line: { color: COLORS.fill },
+      fill: { color: colors.fill },
+      line: { color: colors.fill },
     }
   );
 
@@ -88,7 +150,7 @@ const addContentSlide = (ppt, title, points, page, length) => {
       w: 10,
       h: 0.4,
       fontSize: 24,
-      color: COLORS.primary,
+      color: colors.primary,
       bold: true,
       align: "center"
     }
@@ -101,7 +163,7 @@ const addContentSlide = (ppt, title, points, page, length) => {
       y: 0.85,
       w: 12,
       h: 0,
-      line: { color: COLORS.border, width: 1.2 },
+      line: { color: colors.border, width: 1.2 },
     }
   );
 
@@ -114,8 +176,8 @@ const addContentSlide = (ppt, title, points, page, length) => {
         y,
         w: 12,
         h: 0.58,
-        fill: { color: index % 2 ? "F8FAFC" : "EFF6FF" },
-        line: { color: COLORS.border },
+        fill: { color: index % 2 ? colors.light : colors.subtitle },
+        line: { color: colors.border },
         rectRadius: 0.08
       }
     )
@@ -124,8 +186,8 @@ const addContentSlide = (ppt, title, points, page, length) => {
       y: y + 0.18,
       w: 0.12,
       h: 0.12,
-      fill: { color: COLORS.primary },
-      line: { color: COLORS.primary },
+      fill: { color: colors.primary },
+      line: { color: colors.primary },
     })
     slide.addText(
       point,
@@ -135,7 +197,7 @@ const addContentSlide = (ppt, title, points, page, length) => {
         w: 11,
         h: 0.35,
         fontSize: 15,
-        color: COLORS.text,
+        color: colors.text,
         fit: "shrink",
       }
     );
@@ -149,7 +211,7 @@ const addContentSlide = (ppt, title, points, page, length) => {
       w: 0.8,
       h: 0.2,
       fontSize: 10,
-      color: COLORS.muted,
+      color: colors.muted,
       align: "right"
     }
   );
@@ -161,15 +223,15 @@ const addContentSlide = (ppt, title, points, page, length) => {
       w: 2,
       h: 0.2,
       fontSize: 10,
-      color: COLORS.muted,
+      color: colors.muted,
     }
   );
 };
 
-const addThankYou = (ppt) => {
+const addThankYou = (ppt, colors) => {
   const slide = ppt.addSlide();
 
-  slide.background = { color: COLORS.secondary };
+  slide.background = { color: colors.secondary };
 
   slide.addText(
     "Thank You",
@@ -179,7 +241,7 @@ const addThankYou = (ppt) => {
       w: 13.33,
       h: 0.8,
       fontSize: 34,
-      color: COLORS.white,
+      color: colors.light,
       bold: true,
       align: "center"
     }
@@ -193,7 +255,7 @@ const addThankYou = (ppt) => {
       w: 13.33,
       h: 0.2,
       fontSize: 10,
-      color: COLORS.blue,
+      color: colors.accent,
       align: "center"
     }
   );
@@ -212,11 +274,13 @@ export const generatePpt = async (data) => {
     bodyFontFace: "Aptos",
   }
 
-  addCoverPage(ppt, data);
+  const colors = getRandomTheme();
 
-  data?.slides?.forEach((slide, index) => addContentSlide(ppt, slide?.title, slide?.points, index + 1, data?.slides?.length));
+  addCoverPage(ppt, data, colors);
 
-  addThankYou(ppt);
+  data?.slides?.forEach((slide, index) => addContentSlide(ppt, slide?.title, slide?.points, index + 1, data?.slides?.length, colors));
+
+  addThankYou(ppt, colors);
 
   return ppt;
 }

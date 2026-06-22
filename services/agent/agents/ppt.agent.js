@@ -5,7 +5,6 @@ import { uploadToB2 } from "../utils/uploadToB2.js";
 
 export const pptAgent = async (state) => {
   try {
-    console.log('hit ppt agent: ',);
     const llm = await getModel("ppt");
 
     const prompt = `
