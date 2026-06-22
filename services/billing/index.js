@@ -1,5 +1,6 @@
 import express from 'express';
 import dns from 'dns';
+import connectDB from './config/db';
 
 dns.setServers(['8.8.8.8', '1.1.1.1']);
 
@@ -15,4 +16,6 @@ app.get("/", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Billing started on port: ${PORT}`);
+
+  connectDB();
 });
