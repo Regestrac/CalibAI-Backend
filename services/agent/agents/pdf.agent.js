@@ -40,7 +40,7 @@ export const pdfAgent = async (state) => {
     const fileName = `pdf-${Date.now()}.pdf`;
 
     await uploadToB2(fileName, pdfBuffer, "application/pdf");
-    const downloadUrl = await getFromB2(fileName, 24 * 60);
+    const downloadUrl = await getFromB2(fileName, 24 * 60 * 60);
 
     return {
       ...state,
