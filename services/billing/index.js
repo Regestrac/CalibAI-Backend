@@ -1,6 +1,6 @@
 import express from 'express';
 import dns from 'dns';
-import connectDB from './config/db';
+import connectDB from './config/db.js';
 
 dns.setServers(['8.8.8.8', '1.1.1.1']);
 
