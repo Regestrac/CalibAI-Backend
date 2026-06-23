@@ -56,6 +56,10 @@ export const login = async (req, res) => {
           name: user.name,
           email: user.email,
           avatarUrl: user.avatarUrl,
+          credits: user?.credits,
+          plan: user?.plan,
+          totalCredits: user?.totalCredits,
+          planExpiresAt: user?.planExpiresAt,
         }),
         'EX',
         60 * 60 * 24 * 7
