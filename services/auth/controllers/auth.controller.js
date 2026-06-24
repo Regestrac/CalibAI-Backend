@@ -49,6 +49,7 @@ export const login = async (req, res) => {
 
     const sessionId = crypto.randomUUID();
     try {
+      await redis.set(`user-session-${user?._id}`, sessionId, 'EX', 60 * 60 * 24 * 7);
       await redis.set(
         `session-${sessionId}`,
         JSON.stringify({
@@ -116,7 +117,10 @@ export const updateUserPayment = async (req, res) => {
 
     await user.save();
 
-    const sessionId = req.cookies?.session;
+    const sessionId = await redis.get(`user-session-${user?._id}`);
+    if (!sessionId) {
+      return res.status(404).json({ message: "Session not found." });
+    }
     await redis.set(
       `session-${sessionId}`,
       JSON.stringify({
