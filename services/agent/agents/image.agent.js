@@ -2,6 +2,7 @@ import axios from "axios";
 import { getModel } from "../config/llmModels.js"
 import { uploadToB2 } from "../utils/uploadToB2.js";
 import { getFromB2 } from "../utils/getFromB2.js";
+import { deductCredits } from "../utils/deductCredits.js";
 
 export const imageAgent = async (state) => {
   try {
@@ -40,6 +41,8 @@ export const imageAgent = async (state) => {
 
     await uploadToB2(fileName, buffer, "image/png");
     const downloadUrl = await getFromB2(fileName, 24 * 60 * 60);
+
+    await deductCredits(state?.userId, "image");
 
     return {
       ...state,

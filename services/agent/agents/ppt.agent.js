@@ -2,6 +2,7 @@ import { getModel } from "../config/llmModels.js"
 import { generatePpt } from "../utils/generatePpt.js";
 import { getFromB2 } from "../utils/getFromB2.js";
 import { uploadToB2 } from "../utils/uploadToB2.js";
+import { deductCredits } from "../utils/deductCredits.js";
 
 export const pptAgent = async (state) => {
   try {
@@ -43,6 +44,8 @@ export const pptAgent = async (state) => {
 
     await uploadToB2(fileName, buffer, "application/vnd.openxmlformats-officedocument.presentationml.presentation");
     const downloadUrl = await getFromB2(fileName, 24 * 60 * 60);
+
+    await deductCredits(state?.userId, "ppt");
 
     return {
       ...state,
