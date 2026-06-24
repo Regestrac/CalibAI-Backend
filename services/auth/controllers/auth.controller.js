@@ -149,8 +149,8 @@ export const deductCredits = async (req, res) => {
     const { userId, agent } = req.body;
     const COST = {
       chat: 1,
-      search: 5,
-      coding: 10,
+      search: 4,
+      coding: 15,
       pdf: 10,
       ppt: 10,
       image: 5,

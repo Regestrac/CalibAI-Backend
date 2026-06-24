@@ -77,6 +77,8 @@ export const codingAgent = async (state) => {
       const response = await codingLlm.invoke(prompt);
       const content = JSON.parse(response?.content);
 
+      await deductCredits(state?.userId, "coding");
+
       return {
         ...state,
         aiResponse: "Code generated succesfully",
