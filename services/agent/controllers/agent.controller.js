@@ -18,6 +18,7 @@ export const agent = async (req, res) => {
       conversationId,
       agent,
       userId,
+      file: req?.file,
     });
 
     await updateMemory(conversationId, "user", prompt);
