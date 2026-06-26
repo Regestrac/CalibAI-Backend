@@ -10,18 +10,19 @@ export const router = async (state) => {
     }
   }
 
-  if (state?.file?.mimeType === "application/pdf") {
-    return {
-      ...state,
-      agent: "pdfRag",
-    };
-  }
-
-  if (state?.file?.mimeType?.startsWith("image/")) {
-    return {
-      ...state,
-      agent: "imageAnalyzer",
-    };
+  if (state?.file) {
+    if (state?.file?.mimetype === "application/pdf") {
+      return {
+        ...state,
+        agent: "pdfRag",
+      };
+    }
+    if (state?.file?.mimetype?.startsWith("image/")) {
+      return {
+        ...state,
+        agent: "imageAnalyzer",
+      };
+    }
   }
 
   const llm = await getModel("router");

@@ -13,12 +13,12 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
-    cb(null, `${Date.now()}${file.originalname}`);
+    cb(null, `${Date.now()}-${file.originalname}`);
   }
 });
 
 const fileFilter = (req, file, cb) => {
-  if (file?.mimeType == "application/pdf" || file?.mimeType?.startsWith("image/")) {
+  if (file?.mimetype === "application/pdf" || file?.mimetype?.startsWith("image/")) {
     cb(null, true);
   } else {
     cb(new Error("Only Image or PDF files are allowed."));
