@@ -2,7 +2,7 @@ import axios from 'axios';
 import { graph } from '../graph/graph.js';
 import { updateMemory } from '../config/memory.js';
 
-export const agent = async (req, res) => {
+export const agent = async (req, res, next) => {
   try {
     const { prompt, conversationId, agent } = req.body;
     const userId = req?.headers?.['x-user-id'] || '';
@@ -40,9 +40,6 @@ export const agent = async (req, res) => {
     });
 
   } catch (error) {
-    return res.status(500).json({
-      message: "Internal server error",
-      error: "Agent error: " + error.message,
-    });
+    next(error);
   }
 };
