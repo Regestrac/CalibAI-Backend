@@ -11,12 +11,11 @@ export const pdfRagAgent = async (state) => {
     const buffer = fs.readFileSync(state.file.path);
 
     const pdf = new PDFParse({ data: buffer });
-
     const result = await pdf.getText();
     const text = result.text;
 
     const splitter = new RecursiveCharacterTextSplitter({ chunkSize: 1000, chunkOverlap: 200 });
-    const docs = await splitter.splitText(text);
+    const docs = await splitter.createDocuments([text]);
 
     const collectionName = `pdf-${Date.now()}`;
 
@@ -45,7 +44,7 @@ export const pdfRagAgent = async (state) => {
       ),
     ];
 
-    const response = llm.invoke(messages);
+    const response = await llm.invoke(messages);
 
     await deductCredits(state.userId, "pdfRag");
 

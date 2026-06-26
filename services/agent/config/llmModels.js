@@ -31,7 +31,7 @@ export const getModel = async (agent) => {
     case "coding":
       return openRouterCodingMiniMax;
     case "pdfRag":
-      return gemma;
+      return compound;
     case "imageAnalyzer":
       return gemma;
     default:
