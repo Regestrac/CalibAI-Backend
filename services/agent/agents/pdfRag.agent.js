@@ -5,6 +5,7 @@ import { vectorStore } from '../config/vectorDb.js';
 import { getModel } from '../config/llmModels.js';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 import { deductCredits } from '../utils/deductCredits.js';
+import { checkAgentLimit } from '../config/agentLimit.js';
 
 const PAGE_SEPARATOR_REGEX = /^--\s*\d+\s*of\s*\d+\s*--$/;
 
@@ -21,6 +22,8 @@ const parseName = (path) => {
 
 export const pdfRagAgent = async (state) => {
   try {
+    await checkAgentLimit(state.userId, "pdfRag");
+
     const buffer = fs.readFileSync(state.file.path);
 
     const pdf = new PDFParse({ data: buffer });

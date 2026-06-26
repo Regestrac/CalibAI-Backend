@@ -3,9 +3,12 @@ import { generatePpt } from "../utils/generatePpt.js";
 import { getFromB2 } from "../utils/getFromB2.js";
 import { uploadToB2 } from "../utils/uploadToB2.js";
 import { deductCredits } from "../utils/deductCredits.js";
+import { checkAgentLimit } from "../config/agentLimit.js";
 
 export const pptAgent = async (state) => {
   try {
+    await checkAgentLimit(state.userId, "ppt");
+
     const llm = await getModel("ppt");
 
     const prompt = `

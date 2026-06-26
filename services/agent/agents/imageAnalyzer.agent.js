@@ -2,9 +2,12 @@ import fs from "fs/promises";
 import { getModel } from "../config/llmModels.js"
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
 import { deductCredits } from "../utils/deductCredits.js";
+import { checkAgentLimit } from "../config/agentLimit.js";
 
 export const imageAnalyzerAgent = async (state) => {
   try {
+    await checkAgentLimit(state.userId, "imageAnalyzer");
+
     const llm = await getModel("imageAnalyzer");
 
     const imageBuffer = await fs.readFile(state?.file?.path);

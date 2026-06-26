@@ -3,9 +3,12 @@ import { generatePdf } from "../utils/generatePdf.js";
 import { getFromB2 } from "../utils/getFromB2.js";
 import { uploadToB2 } from "../utils/uploadToB2.js";
 import { deductCredits } from "../utils/deductCredits.js";
+import { checkAgentLimit } from "../config/agentLimit.js";
 
 export const pdfAgent = async (state) => {
   try {
+    await checkAgentLimit(state.userId, "pdf");
+
     const llm = await getModel("pdf");
 
     const prompt = `
