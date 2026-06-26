@@ -1,5 +1,6 @@
 import { ChatGroq } from "@langchain/groq";
 import { ChatOpenRouter } from "@langchain/openrouter";
+import { ChatGoogle } from "@langchain/google";
 
 const gpt = new ChatGroq({
   model: "openai/gpt-oss-120b",
@@ -18,9 +19,9 @@ const openRouterCodingMiniMax = new ChatOpenRouter({
   // maxTokens: 2500,
 });
 
-const gemma = new ChatOpenRouter({
-  model: "google/gemma-4-26b-a4b-it:free",
-});
+const gemini = new ChatGoogle({
+  model: "gemini-3.5-flash-lite",
+})
 
 export const getModel = async (agent) => {
   switch (agent) {
@@ -33,7 +34,7 @@ export const getModel = async (agent) => {
     case "pdfRag":
       return compound;
     case "imageAnalyzer":
-      return gemma;
+      return gemini;
     default:
       return compound;
   };
