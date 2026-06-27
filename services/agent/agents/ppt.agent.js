@@ -66,7 +66,7 @@ export const pptAgent = async (state) => {
     console.log("PPT agent error: ", error)
     return {
       ...state,
-      aiResponse: '❌ Failed to generate PPT.'
+      aiResponse: error?.data?.message || '❌ Failed to generate PPT.'
     }
   }
 }

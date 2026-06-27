@@ -54,7 +54,7 @@ export const imageAnalyzerAgent = async (state) => {
     console.log("Image analyzer error: ", error);
     return {
       ...state,
-      aiResponse: "❌ Failed to analyze file.",
+      aiResponse: error?.data?.message || "❌ Failed to analyze file.",
     }
   } finally {
     await fs.unlink(state?.file?.path);

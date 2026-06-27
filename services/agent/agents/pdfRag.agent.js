@@ -102,7 +102,7 @@ export const pdfRagAgent = async (state) => {
 
     return {
       ...state,
-      aiResponse: '❌ Failed to analyze PDF',
+      aiResponse: error?.data?.message || '❌ Failed to analyze PDF',
     };
   } finally {
     fs.unlinkSync(state.file.path);

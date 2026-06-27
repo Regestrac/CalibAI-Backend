@@ -61,7 +61,7 @@ export const imageAgent = async (state) => {
     console.log("Error:", error);
     return {
       ...state,
-      aiResponse: `❌ Failed to generate image.`,
+      aiResponse: error?.data?.message || `❌ Failed to generate image.`,
     }
   }
 }

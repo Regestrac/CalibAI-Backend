@@ -56,7 +56,7 @@ export const chatAgent = async (state) => {
   } catch {
     return {
       ...state,
-      aiResponse: `❌ Failed to generate response.`
+      aiResponse: error?.data?.message || `❌ Failed to generate response.`
     }
   }
 }

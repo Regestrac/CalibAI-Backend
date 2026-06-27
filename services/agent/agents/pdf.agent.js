@@ -64,7 +64,7 @@ export const pdfAgent = async (state) => {
     console.log("PDF agent error: ", error);
     return {
       ...state,
-      aiResponse: "❌ Failed to generate PDF.",
+      aiResponse: error?.data?.message || "❌ Failed to generate PDF.",
     }
   }
 }

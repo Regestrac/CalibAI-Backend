@@ -21,6 +21,7 @@ export const searchAgent = async (state) => {
       ...state,
       searchResults: [],
       images: [],
+      aiResponse: error?.data?.message || "❌ Failed to get search results."
     }
   }
 };
