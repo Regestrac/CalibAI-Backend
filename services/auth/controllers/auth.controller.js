@@ -144,6 +144,37 @@ export const updateUserPayment = async (req, res) => {
   }
 };
 
+export const checkCredits = async (req, res) => {
+  try {
+    const { userId, agent } = req.body;
+    const COST = {
+      chat: 1,
+      search: 3,
+      coding: 12,
+      pdf: 6,
+      ppt: 8,
+      image: 5,
+      pdfRag: 10,
+      imageAnalyzer: 10,
+    };
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const requiredCredits = COST[agent] || 1;
+    if (user.credits < requiredCredits) {
+      return res.status(400).json({ message: "Not enough credits." });
+    }
+
+    return res.status(200).json({ success: true, credits: user.credits });
+  } catch (error) {
+    return res.status(500).json({ message: `Check credits error: ${error}` });
+  }
+}
+
 export const deductCredits = async (req, res) => {
   try {
     const { userId, agent } = req.body;
