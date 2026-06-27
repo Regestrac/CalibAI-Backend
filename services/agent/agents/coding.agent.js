@@ -82,11 +82,12 @@ export const codingAgent = async (state) => {
       const response = await codingLlm.invoke(prompt);
       const content = JSON.parse(response?.content);
 
-      await deductCredits(state?.userId, "coding");
+      const { credits } = await deductCredits(state?.userId, "coding");
 
       return {
         ...state,
         aiResponse: "Code generated succesfully",
+        remainingCredits: credits,
         artifacts: [
           {
             id: Date.now(),
@@ -114,11 +115,12 @@ export const codingAgent = async (state) => {
       User Request: ${state?.prompt}
     `);
 
-    await deductCredits(state?.userId, "coding");
+    const { credits } = await deductCredits(state?.userId, "coding");
 
     return {
       ...state,
       aiResponse: response?.content,
+      remainingCredits: credits,
       artifacts: [],
     }
   } catch (error) {

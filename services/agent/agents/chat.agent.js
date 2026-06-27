@@ -49,11 +49,12 @@ export const chatAgent = async (state) => {
 
     const response = await llm.invoke(messages);
 
-    await deductCredits(state?.userId, "chat");
+    const { credits } = await deductCredits(state?.userId, "chat");
 
     return {
       ...state,
       aiResponse: response.content,
+      remainingCredits: credits,
     };
   } catch (error) {
     return {

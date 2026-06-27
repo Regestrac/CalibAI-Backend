@@ -47,11 +47,12 @@ export const imageAnalyzerAgent = async (state) => {
 
     const response = await llm.invoke(messages);
 
-    await deductCredits(state?.userId, "imageAnalyzer");
+    const { credits } = await deductCredits(state?.userId, "imageAnalyzer");
 
     return {
       ...state,
       aiResponse: response?.content,
+      remainingCredits: credits,
     }
   } catch (error) {
     return {

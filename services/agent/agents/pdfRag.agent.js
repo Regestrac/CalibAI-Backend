@@ -93,11 +93,12 @@ export const pdfRagAgent = async (state) => {
 
     const response = await llm.invoke(messages);
 
-    await deductCredits(state.userId, "pdfRag");
+    const { credits } = await deductCredits(state.userId, "pdfRag");
 
     return {
       ...state,
       aiResponse: response?.content,
+      remainingCredits: credits,
     };
   } catch (error) {
     return {

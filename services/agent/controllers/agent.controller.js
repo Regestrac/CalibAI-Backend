@@ -37,6 +37,7 @@ export const agent = async (req, res, next) => {
       data: result?.aiResponse,
       images: result?.images,
       artifacts: result?.artifacts,
+      remainingCredits: result?.remainingCredits,
     });
 
   } catch (error) {

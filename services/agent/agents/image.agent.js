@@ -47,7 +47,7 @@ export const imageAgent = async (state) => {
     await uploadToB2(fileName, buffer, "image/png");
     const downloadUrl = await getFromB2(fileName, 24 * 60 * 60);
 
-    await deductCredits(state?.userId, "image");
+    const { credits } = await deductCredits(state?.userId, "image");
 
     return {
       ...state,
@@ -58,6 +58,7 @@ export const imageAgent = async (state) => {
       🔗 [Download Image](${downloadUrl})
       
       ⏳ Link expires in 24 hours.`.replaceAll("\n      \n      ", "\n\n"),
+      remainingCredits: credits,
     }
   } catch (error) {
     return {

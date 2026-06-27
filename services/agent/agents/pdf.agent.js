@@ -48,7 +48,7 @@ export const pdfAgent = async (state) => {
     await uploadToB2(fileName, pdfBuffer, "application/pdf");
     const downloadUrl = await getFromB2(fileName, 24 * 60 * 60);
 
-    await deductCredits(state?.userId, "pdf");
+    const { credits } = await deductCredits(state?.userId, "pdf");
 
     return {
       ...state,
@@ -61,6 +61,7 @@ export const pdfAgent = async (state) => {
       🔗 [Download PDF](${downloadUrl})
       
       ⏳ _Link expires in 24 hours._`.replaceAll("\n      \n     ", "\n\n"),
+      remainingCredits: credits,
     }
   } catch (error) {
     return {

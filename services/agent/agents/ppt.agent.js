@@ -50,7 +50,7 @@ export const pptAgent = async (state) => {
     await uploadToB2(fileName, buffer, "application/vnd.openxmlformats-officedocument.presentationml.presentation");
     const downloadUrl = await getFromB2(fileName, 24 * 60 * 60);
 
-    await deductCredits(state?.userId, "ppt");
+    const { credits } = await deductCredits(state?.userId, "ppt");
 
     return {
       ...state,
@@ -63,6 +63,7 @@ export const pptAgent = async (state) => {
       🔗 [Download PPT](${downloadUrl})
       
       ⏳ _Link expires in 24 hours._`.replaceAll("\n      \n     ", "\n\n"),
+      remainingCredits: credits,
     }
   } catch (error) {
     return {
