@@ -4,6 +4,7 @@ import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { vectorStore } from '../config/vectorDb.js';
 import { getModel } from '../config/llmModels.js';
 import { HumanMessage, SystemMessage } from '@langchain/core/messages';
+import { checkCredits } from '../utils/checkCredits.js';
 import { deductCredits } from '../utils/deductCredits.js';
 import { checkAgentLimit } from '../config/agentLimit.js';
 
@@ -23,6 +24,7 @@ const parseName = (path) => {
 export const pdfRagAgent = async (state) => {
   try {
     await checkAgentLimit(state.userId, "pdfRag");
+    await checkCredits(state.userId, "pdfRag");
 
     const buffer = fs.readFileSync(state.file.path);
 
@@ -98,11 +100,9 @@ export const pdfRagAgent = async (state) => {
       aiResponse: response?.content,
     };
   } catch (error) {
-    console.log(error);
-
     return {
       ...state,
-      aiResponse: error?.data?.message || '❌ Failed to analyze PDF',
+      aiResponse: error?.response?.data?.message || error?.data?.message || '❌ Failed to analyze PDF',
     };
   } finally {
     fs.unlinkSync(state.file.path);

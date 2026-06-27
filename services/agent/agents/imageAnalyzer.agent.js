@@ -1,12 +1,14 @@
 import fs from "fs/promises";
 import { getModel } from "../config/llmModels.js"
 import { HumanMessage, SystemMessage } from "@langchain/core/messages";
+import { checkCredits } from "../utils/checkCredits.js";
 import { deductCredits } from "../utils/deductCredits.js";
 import { checkAgentLimit } from "../config/agentLimit.js";
 
 export const imageAnalyzerAgent = async (state) => {
   try {
     await checkAgentLimit(state.userId, "imageAnalyzer");
+    await checkCredits(state?.userId, "imageAnalyzer");
 
     const llm = await getModel("imageAnalyzer");
 
@@ -44,6 +46,7 @@ export const imageAnalyzerAgent = async (state) => {
     ];
 
     const response = await llm.invoke(messages);
+
     await deductCredits(state?.userId, "imageAnalyzer");
 
     return {
@@ -51,10 +54,9 @@ export const imageAnalyzerAgent = async (state) => {
       aiResponse: response?.content,
     }
   } catch (error) {
-    console.log("Image analyzer error: ", error);
     return {
       ...state,
-      aiResponse: error?.data?.message || "❌ Failed to analyze file.",
+      aiResponse: error?.response?.data?.message || error?.data?.message || "❌ Failed to analyze file.",
     }
   } finally {
     await fs.unlink(state?.file?.path);

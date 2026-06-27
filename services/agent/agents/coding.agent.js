@@ -1,10 +1,12 @@
 import { checkAgentLimit } from "../config/agentLimit.js";
 import { getModel } from "../config/llmModels.js"
+import { checkCredits } from "../utils/checkCredits.js";
 import { deductCredits } from "../utils/deductCredits.js";
 
 export const codingAgent = async (state) => {
   try {
     await checkAgentLimit(state.userId, "coding");
+    await checkCredits(state?.userId, "coding");
 
     const intentLlm = await getModel("intent");
     const codingLlm = await getModel("coding");
@@ -119,10 +121,10 @@ export const codingAgent = async (state) => {
       aiResponse: response?.content,
       artifacts: [],
     }
-  } catch {
+  } catch (error) {
     return {
       ...state,
-      aiResponse: error?.data?.message || `❌ Failed to generate response.`,
+      aiResponse: error?.response?.data?.message || error?.data?.message || `❌ Failed to generate response.`,
       artifacts: [],
     }
   }

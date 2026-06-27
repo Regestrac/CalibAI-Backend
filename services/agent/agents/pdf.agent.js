@@ -2,12 +2,14 @@ import { getModel } from "../config/llmModels.js"
 import { generatePdf } from "../utils/generatePdf.js";
 import { getFromB2 } from "../utils/getFromB2.js";
 import { uploadToB2 } from "../utils/uploadToB2.js";
+import { checkCredits } from "../utils/checkCredits.js";
 import { deductCredits } from "../utils/deductCredits.js";
 import { checkAgentLimit } from "../config/agentLimit.js";
 
 export const pdfAgent = async (state) => {
   try {
     await checkAgentLimit(state.userId, "pdf");
+    await checkCredits(state?.userId, "pdf");
 
     const llm = await getModel("pdf");
 
@@ -61,10 +63,9 @@ export const pdfAgent = async (state) => {
       ⏳ _Link expires in 24 hours._`.replaceAll("\n      \n     ", "\n\n"),
     }
   } catch (error) {
-    console.log("PDF agent error: ", error);
     return {
       ...state,
-      aiResponse: error?.data?.message || "❌ Failed to generate PDF.",
+      aiResponse: error?.response?.data?.message || error?.data?.message || "❌ Failed to generate PDF.",
     }
   }
 }

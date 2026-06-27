@@ -2,12 +2,14 @@ import axios from "axios";
 import { getModel } from "../config/llmModels.js"
 import { uploadToB2 } from "../utils/uploadToB2.js";
 import { getFromB2 } from "../utils/getFromB2.js";
+import { checkCredits } from "../utils/checkCredits.js";
 import { deductCredits } from "../utils/deductCredits.js";
 import { checkAgentLimit } from "../config/agentLimit.js";
 
 export const imageAgent = async (state) => {
   try {
     await checkAgentLimit(state.userId, "image");
+    await checkCredits(state?.userId, "image");
 
     const llm = await getModel("image");
     const res = await llm.invoke(`
@@ -58,10 +60,9 @@ export const imageAgent = async (state) => {
       ⏳ Link expires in 24 hours.`.replaceAll("\n      \n      ", "\n\n"),
     }
   } catch (error) {
-    console.log("Error:", error);
     return {
       ...state,
-      aiResponse: error?.data?.message || `❌ Failed to generate image.`,
+      aiResponse: error?.response?.data?.message || error?.data?.message || `❌ Failed to generate image.`,
     }
   }
 }

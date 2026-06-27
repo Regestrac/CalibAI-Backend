@@ -2,12 +2,14 @@ import { getModel } from "../config/llmModels.js"
 import { generatePpt } from "../utils/generatePpt.js";
 import { getFromB2 } from "../utils/getFromB2.js";
 import { uploadToB2 } from "../utils/uploadToB2.js";
+import { checkCredits } from "../utils/checkCredits.js";
 import { deductCredits } from "../utils/deductCredits.js";
 import { checkAgentLimit } from "../config/agentLimit.js";
 
 export const pptAgent = async (state) => {
   try {
     await checkAgentLimit(state.userId, "ppt");
+    await checkCredits(state?.userId, "ppt");
 
     const llm = await getModel("ppt");
 
@@ -63,10 +65,9 @@ export const pptAgent = async (state) => {
       ⏳ _Link expires in 24 hours._`.replaceAll("\n      \n     ", "\n\n"),
     }
   } catch (error) {
-    console.log("PPT agent error: ", error)
     return {
       ...state,
-      aiResponse: error?.data?.message || '❌ Failed to generate PPT.'
+      aiResponse: error?.response?.data?.message || error?.data?.message || '❌ Failed to generate PPT.'
     }
   }
 }
