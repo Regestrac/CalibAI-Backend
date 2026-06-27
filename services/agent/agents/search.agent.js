@@ -2,6 +2,7 @@ import { checkAgentLimit } from "../config/agentLimit.js";
 import { searchTool } from "../config/tavliy.js";
 import { checkCredits } from "../utils/checkCredits.js";
 import { deductCredits } from "../utils/deductCredits.js";
+import { logToFile } from "../utils/logToFile.js";
 
 export const searchAgent = async (state) => {
   try {
@@ -19,6 +20,16 @@ export const searchAgent = async (state) => {
       remainingCredits: credits,
     }
   } catch (error) {
+    logToFile("Search agent error", {
+      message: error?.message,
+      name: error?.name,
+      stack: error?.stack,
+      code: error?.code,
+      status: error?.response?.status,
+      responseData: error?.response?.data,
+      config: error?.config ? { url: error.config.url, method: error.config.method } : undefined,
+      data: error?.data || "(empty)",
+    });
     return {
       ...state,
       searchResults: [],

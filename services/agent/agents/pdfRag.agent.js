@@ -7,6 +7,7 @@ import { HumanMessage, SystemMessage } from '@langchain/core/messages';
 import { checkCredits } from '../utils/checkCredits.js';
 import { deductCredits } from '../utils/deductCredits.js';
 import { checkAgentLimit } from '../config/agentLimit.js';
+import { logToFile } from '../utils/logToFile.js';
 
 const PAGE_SEPARATOR_REGEX = /^--\s*\d+\s*of\s*\d+\s*--$/;
 
@@ -101,6 +102,16 @@ export const pdfRagAgent = async (state) => {
       remainingCredits: credits,
     };
   } catch (error) {
+    logToFile("PDF RAG agent error", {
+      message: error?.message,
+      name: error?.name,
+      stack: error?.stack,
+      code: error?.code,
+      status: error?.response?.status,
+      responseData: error?.response?.data,
+      config: error?.config ? { url: error.config.url, method: error.config.method } : undefined,
+      data: error?.data || "(empty)",
+    });
     return {
       ...state,
       aiResponse: error?.response?.data?.message || error?.data?.message || '❌ Failed to analyze PDF',
