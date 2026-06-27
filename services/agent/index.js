@@ -20,7 +20,7 @@ app.use((err, req, res, next) => {
     return res.status(err?.status).json(err?.data);
   }
 
-  return res.status(500).json({ message: "Internal server error", error: "Agent error: " + error.message });
+  return res.status(500).json({ message: "Internal server error", error: "Agent error: " + err.message });
 })
 
 app.get("/", (req, res) => {
