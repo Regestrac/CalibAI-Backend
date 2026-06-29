@@ -8,6 +8,10 @@ const conversationSchema = new mongoose.Schema({
   userId: {
     type: String,
   },
+  deletedAt: {
+    type: Date,
+    default: null,
+  },
 }, {
   timestamps: true,
 });

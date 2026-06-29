@@ -28,6 +28,10 @@ const messageSchema = new mongoose.Schema({
   content: String,
   images: [String],
   artifacts: [artifactSchema],
+  deletedAt: {
+    type: Date,
+    default: null,
+  },
 }, {
   timestamps: true,
 });
