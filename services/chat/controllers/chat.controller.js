@@ -22,6 +22,7 @@ export const getConversations = async (req, res) => {
 
     const conversations = await Conversation.find({
       userId,
+      deletedAt: null,
     }).sort({ updatedAt: -1 });
 
     return res.status(200).json(conversations);
@@ -60,10 +61,37 @@ export const saveMessage = async (req, res) => {
   }
 };
 
+export const deleteConversation = async (req, res) => {
+  try {
+    const userId = req.headers["x-user-id"];
+    const { id } = req.params;
+
+    const conversation = await Conversation.findOneAndUpdate(
+      { _id: id, userId, deletedAt: null },
+      { deletedAt: new Date() },
+      { new: true }
+    );
+
+    if (!conversation) {
+      return res.status(404).json({ message: "Conversation not found" });
+    }
+
+    await Message.updateMany(
+      { conversationId: id, deletedAt: null },
+      { deletedAt: new Date() }
+    );
+
+    return res.status(200).json({ message: "Conversation deleted" });
+  } catch (error) {
+    return res.status(500).json({ message: `Delete conversation error: ${error}` });
+  }
+};
+
 export const getMessages = async (req, res) => {
   try {
     const messages = await Message.find({
       conversationId: req.params.conversationId,
+      deletedAt: null,
     });
 
     return res.status(200).json(messages);
