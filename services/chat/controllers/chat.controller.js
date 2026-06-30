@@ -63,14 +63,9 @@ export const saveMessage = async (req, res) => {
 
 export const deleteConversation = async (req, res) => {
   try {
-    const userId = req.headers["x-user-id"];
     const { id } = req.params;
 
-    const conversation = await Conversation.findOneAndUpdate(
-      { _id: id, userId, deletedAt: null },
-      { deletedAt: new Date() },
-      { new: true }
-    );
+    const conversation = await Conversation.findByIdAndUpdate(id, { deletedAt: new Date() });
 
     if (!conversation) {
       return res.status(404).json({ message: "Conversation not found" });
