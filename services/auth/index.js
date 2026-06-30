@@ -17,8 +17,8 @@ app.get("/", (req, res) => {
   res.json({ message: "Hello from auth" })
 })
 
-app.listen(PORT, () => {
-  console.log(`Auth service running on poer: ${PORT}`)
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Auth service running on port: ${PORT}`)
 
   connectDB();
 })
