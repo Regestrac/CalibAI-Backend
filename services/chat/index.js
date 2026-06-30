@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
   res.status(200).json({ message: "Hello from Chat" });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Chat started on port: ${PORT}`);
 
   connectDB();
