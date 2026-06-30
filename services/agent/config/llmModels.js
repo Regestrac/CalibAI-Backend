@@ -2,12 +2,12 @@ import { ChatGroq } from "@langchain/groq";
 import { ChatOpenRouter } from "@langchain/openrouter";
 import { ChatGoogle } from "@langchain/google";
 
-const gpt = new ChatGroq({
-  model: "openai/gpt-oss-120b",
+const defaultModel = new ChatGroq({
+  model: "qwen/qwen3.8-27b",
 });
 
-const compound = new ChatGroq({
-  model: "groq/compound",
+const chatModel = new ChatGroq({
+  model: "openai/gpt-oss-120b",
 });
 
 const openRouterCodingMiniMax = new ChatOpenRouter({
@@ -26,16 +26,16 @@ const gemini = new ChatGoogle({
 export const getModel = async (agent) => {
   switch (agent) {
     case "chat":
-      return gpt;
+      return chatModel;
     case "search":
-      return compound;
+      return defaultModel;
     case "coding":
       return openRouterCodingMiniMax;
     case "pdfRag":
-      return compound;
+      return defaultModel;
     case "imageAnalyzer":
       return gemini;
     default:
-      return compound;
+      return defaultModel;
   };
 };
