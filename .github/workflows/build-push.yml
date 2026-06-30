@@ -1,0 +1,284 @@
+name: Build and push service images
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "gateway/**"
+      - "services/**"
+      - "shared/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".github/workflows/build-push.yml"
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  changes:
+    name: Detect changed services
+    runs-on: ubuntu-latest
+    outputs:
+      gateway: ${{ steps.filter.outputs.gateway }}
+      auth: ${{ steps.filter.outputs.auth }}
+      chat: ${{ steps.filter.outputs.chat }}
+      agent: ${{ steps.filter.outputs.agent }}
+      billing: ${{ steps.filter.outputs.billing }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            gateway:
+              - 'gateway/**'
+              - 'shared/**'
+              - 'package.json'
+              - 'package-lock.json'
+              - '.github/workflows/build-push.yml'
+            auth:
+              - 'services/auth/**'
+              - 'shared/**'
+              - 'package.json'
+              - 'package-lock.json'
+              - '.github/workflows/build-push.yml'
+            chat:
+              - 'services/chat/**'
+              - 'shared/**'
+              - 'package.json'
+              - 'package-lock.json'
+              - '.github/workflows/build-push.yml'
+            agent:
+              - 'services/agent/**'
+              - 'shared/**'
+              - 'package.json'
+              - 'package-lock.json'
+              - '.github/workflows/build-push.yml'
+            billing:
+              - 'services/billing/**'
+              - 'shared/**'
+              - 'package.json'
+              - 'package-lock.json'
+              - '.github/workflows/build-push.yml'
+
+  gateway:
+    name: Build & deploy gateway
+    needs: changes
+    if: needs.changes.outputs.gateway == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/gateway
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=sha-
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: gateway/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          provenance: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Trigger Render redeploy
+        env:
+          DEPLOY_HOOK: ${{ secrets.RENDER_HOOK_GATEWAY }}
+        run: |
+          sleep 10
+          curl -fsS -X POST "$DEPLOY_HOOK"
+
+  auth:
+    name: Build & deploy auth
+    needs: changes
+    if: needs.changes.outputs.auth == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/auth
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=sha-
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: services/auth/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          provenance: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Trigger Render redeploy
+        env:
+          DEPLOY_HOOK: ${{ secrets.RENDER_HOOK_AUTH }}
+        run: |
+          sleep 10
+          curl -fsS -X POST "$DEPLOY_HOOK"
+
+  chat:
+    name: Build & deploy chat
+    needs: changes
+    if: needs.changes.outputs.chat == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/chat
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=sha-
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: services/chat/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          provenance: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Trigger Render redeploy
+        env:
+          DEPLOY_HOOK: ${{ secrets.RENDER_HOOK_CHAT }}
+        run: |
+          sleep 10
+          curl -fsS -X POST "$DEPLOY_HOOK"
+
+  agent:
+    name: Build & deploy agent
+    needs: changes
+    if: needs.changes.outputs.agent == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/agent
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=sha-
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: services/agent/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          provenance: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Trigger Render redeploy
+        env:
+          DEPLOY_HOOK: ${{ secrets.RENDER_HOOK_AGENT }}
+        run: |
+          sleep 10
+          curl -fsS -X POST "$DEPLOY_HOOK"
+
+  billing:
+    name: Build & deploy billing
+    needs: changes
+    if: needs.changes.outputs.billing == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.ACCESS_TOKEN }}
+
+      - name: Image metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/billing
+          tags: |
+            type=raw,value=latest
+            type=sha,prefix=sha-
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: services/billing/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          provenance: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Trigger Render redeploy
+        env:
+          DEPLOY_HOOK: ${{ secrets.RENDER_HOOK_BILLING }}
+        run: |
+          sleep 10
+          curl -fsS -X POST "$DEPLOY_HOOK"
