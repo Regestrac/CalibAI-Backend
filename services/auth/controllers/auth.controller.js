@@ -7,7 +7,7 @@ import redis from '../../../shared/redis/redis.js';
 const COOKIE_OPTIONS = {
   httpOnly: true,
   secure: true,
-  sameSite: "lax",
+  sameSite: "none",
   path: "/",
   maxAge: 7 * 24 * 60 * 60 * 1000,
 };
