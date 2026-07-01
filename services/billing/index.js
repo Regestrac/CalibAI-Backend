@@ -16,7 +16,7 @@ app.get("/", (req, res) => {
   res.status(200).json({ message: "Hello from Billing" });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Billing started on port: ${PORT}`);
 
   connectDB();
