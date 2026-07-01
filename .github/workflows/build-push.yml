@@ -18,7 +18,7 @@ permissions:
 jobs:
   changes:
     name: Detect changed services
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     outputs:
       gateway: ${{ steps.filter.outputs.gateway }}
       auth: ${{ steps.filter.outputs.auth }}
@@ -67,7 +67,7 @@ jobs:
     name: Build & deploy gateway
     needs: changes
     if: needs.changes.outputs.gateway == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7
 
@@ -111,7 +111,7 @@ jobs:
     name: Build & deploy auth
     needs: changes
     if: needs.changes.outputs.auth == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7
 
@@ -155,7 +155,7 @@ jobs:
     name: Build & deploy chat
     needs: changes
     if: needs.changes.outputs.chat == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7
 
@@ -199,7 +199,7 @@ jobs:
     name: Build & deploy agent
     needs: changes
     if: needs.changes.outputs.agent == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7
 
@@ -243,7 +243,7 @@ jobs:
     name: Build & deploy billing
     needs: changes
     if: needs.changes.outputs.billing == 'true'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v7
 
