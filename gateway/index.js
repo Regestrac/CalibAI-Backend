@@ -27,6 +27,6 @@ app.get('/', (req, res) => {
   res.json({ success: true, message: 'Gateway request success.' });
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Gateway started on port: ${PORT}`)
 })
