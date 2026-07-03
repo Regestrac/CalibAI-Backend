@@ -3,6 +3,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { app } from '../config/firebase.js';
 import User from '../models/user.model.js';
 import redis from '../../../shared/redis/redis.js';
+import { logError } from '../utils/logError.js';
 
 const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -26,7 +27,7 @@ export const login = async (req, res) => {
     try {
       decodedToken = await auth.verifyIdToken(token);
     } catch (err) {
-      console.error("Firebase token verification failed:", err.message);
+      logError("Firebase token verification failed", err);
       return res.status(401).json({ message: "Invalid or expired authentication token." });
     }
 
@@ -43,7 +44,7 @@ export const login = async (req, res) => {
         });
       }
     } catch (err) {
-      console.error("Database error during login:", err.message);
+      logError("Database error during login", err, { firebaseUid: decodedToken?.uid });
       return res.status(500).json({ message: "Failed to process user data. Please try again." });
     }
 
@@ -66,7 +67,7 @@ export const login = async (req, res) => {
         60 * 60 * 24 * 7
       );
     } catch (err) {
-      console.error("Redis session error:", err.message);
+      logError("Redis session error", err, { userId: user?._id });
       return res.status(500).json({ message: "Failed to create session. Please try again." });
     }
 
@@ -79,7 +80,7 @@ export const login = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Unexpected login error:", error);
+    logError("Unexpected login error", error, { body: req?.body });
     return res.status(500).json({ message: "An unexpected error occurred during login. Please try again." });
   }
 }
@@ -96,7 +97,7 @@ export const logout = async (req, res) => {
 
     res.status(200).json({ message: "Logged out successfully." })
   } catch (error) {
-    console.error("Logout error:", error);
+    logError("Logout error", error, { sessionId: req?.cookies?.session });
     return res.status(500).json({ message: "Failed to log out. Please try again." });
   }
 };
@@ -139,7 +140,7 @@ export const updateUserPayment = async (req, res) => {
 
     return res.status(200).json({ message: "Payment updated successfully." });
   } catch (error) {
-    console.error("Payment update error:", error);
+    logError("Payment update error", error, { userId: req?.body?.userId });
     return res.status(500).json({ message: "Failed to update payment. Please try again." });
   }
 };
@@ -171,6 +172,7 @@ export const checkCredits = async (req, res) => {
 
     return res.status(200).json({ success: true, credits: user.credits });
   } catch (error) {
+    logError("Check credits error", error, { userId, agent });
     return res.status(500).json({ message: `Check credits error: ${error}` });
   }
 }
@@ -225,6 +227,7 @@ export const deductCredits = async (req, res) => {
 
     return res.status(200).json({ success: true, credits: user.credits });
   } catch (error) {
+    logError("Deduct credits error", error, { userId, agent });
     return res.status(500).json({ message: `Deduct credits error: ${error}` });
   }
 }
