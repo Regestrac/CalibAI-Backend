@@ -14,7 +14,7 @@ const openRouterCodingMiniMax = new ChatOpenRouter({
   // model: "deepseek/deepseek-chat",
   // model: "z-ai/glm-5.2:free",
   // model: "nvidia/nemotron-3-ultra-550b-a55b:free",
-  model: "minimax/minimax-m3:free",
+  model: "qwen/qwen3.8-27b:free",
   // temperature: 0,
   // maxTokens: 2500,
 });
