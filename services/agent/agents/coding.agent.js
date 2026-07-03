@@ -4,6 +4,26 @@ import { checkCredits } from "../utils/checkCredits.js";
 import { deductCredits } from "../utils/deductCredits.js";
 import { logError } from "../utils/logError.js";
 
+const isRateLimitError = (error) => {
+  let current = error;
+  while (current) {
+    if (current?.name === "OpenRouterRateLimitError") return true;
+    current = current?.cause || current?.error;
+  }
+  return false;
+};
+
+const invokeCodingLlm = async (llm, prompt) => {
+  try {
+    return await llm.invoke(prompt);
+  } catch (error) {
+    if (!isRateLimitError(error)) throw error;
+  }
+
+  const fallbackLlm = await getModel("codingFallback");
+  return await fallbackLlm.invoke(prompt);
+};
+
 export const codingAgent = async (state) => {
   try {
     await checkAgentLimit(state.userId, "coding");
@@ -80,7 +100,7 @@ export const codingAgent = async (state) => {
         User Request: ${state?.prompt}
       `;
 
-      const response = await codingLlm.invoke(prompt);
+      const response = await invokeCodingLlm(codingLlm, prompt);
       const content = JSON.parse(response?.content);
 
       const { credits } = await deductCredits(state?.userId, "coding");
@@ -100,7 +120,7 @@ export const codingAgent = async (state) => {
       };
     }
 
-    const response = await codingLlm.invoke(`
+    const response = await invokeCodingLlm(codingLlm, `
       The user's request is: ${intent}.
       
       Return markdown only.

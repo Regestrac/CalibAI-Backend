@@ -19,6 +19,10 @@ const openRouterCodingMiniMax = new ChatOpenRouter({
   // maxTokens: 2500,
 });
 
+const openRouterCodingFallback = new ChatOpenRouter({
+  model: "nvidia/nemotron-3-ultra-550b-a55b:free",
+});
+
 const gemini = new ChatGoogle({
   model: "gemini-3.5-flash-lite",
 })
@@ -31,6 +35,8 @@ export const getModel = async (agent) => {
       return defaultModel;
     case "coding":
       return openRouterCodingMiniMax;
+    case "codingFallback":
+      return openRouterCodingFallback;
     case "pdfRag":
       return defaultModel;
     case "imageAnalyzer":
