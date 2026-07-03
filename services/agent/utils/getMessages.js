@@ -1,4 +1,5 @@
 import axios from "axios";
+import { logError } from "./logError.js";
 
 export const getMessages = async (conversationId) => {
   try {
@@ -6,7 +7,7 @@ export const getMessages = async (conversationId) => {
 
     return data;
   } catch (error) {
-    console.log("Get messages from agent error: ", error);
+    logError("Get messages error", error, { conversationId });
     return null;
   }
 }

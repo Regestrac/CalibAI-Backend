@@ -2,7 +2,7 @@ import { checkAgentLimit } from "../config/agentLimit.js";
 import { getModel } from "../config/llmModels.js"
 import { checkCredits } from "../utils/checkCredits.js";
 import { deductCredits } from "../utils/deductCredits.js";
-import { logToFile } from "../utils/logToFile.js";
+import { logError } from "../utils/logError.js";
 
 export const codingAgent = async (state) => {
   try {
@@ -125,16 +125,12 @@ export const codingAgent = async (state) => {
       artifacts: [],
     }
   } catch (error) {
-    logToFile("Coding agent error", {
-      message: error?.message,
-      name: error?.name,
-      stack: error?.stack,
-      code: error?.code,
-      status: error?.response?.status,
-      responseData: error?.response?.data,
-      config: error?.config ? { url: error.config.url, method: error.config.method } : undefined,
-      data: error?.data || "(empty)",
+    logError("Coding agent error", error, {
+      agent: "coding",
+      userId: state?.userId,
+      conversationId: state?.conversationId,
     });
+
     return {
       ...state,
       aiResponse: error?.response?.data?.message || error?.data?.message || `❌ Failed to generate response.`,

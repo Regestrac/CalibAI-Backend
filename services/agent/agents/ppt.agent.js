@@ -5,7 +5,7 @@ import { uploadToB2 } from "../utils/uploadToB2.js";
 import { checkCredits } from "../utils/checkCredits.js";
 import { deductCredits } from "../utils/deductCredits.js";
 import { checkAgentLimit } from "../config/agentLimit.js";
-import { logToFile } from "../utils/logToFile.js";
+import { logError } from "../utils/logError.js";
 
 export const pptAgent = async (state) => {
   try {
@@ -67,16 +67,12 @@ export const pptAgent = async (state) => {
       remainingCredits: credits,
     }
   } catch (error) {
-    logToFile("PPT agent error", {
-      message: error?.message,
-      name: error?.name,
-      stack: error?.stack,
-      code: error?.code,
-      status: error?.response?.status,
-      responseData: error?.response?.data,
-      config: error?.config ? { url: error.config.url, method: error.config.method } : undefined,
-      data: error?.data || "(empty)",
+    logError("PPT agent error", error, {
+      agent: "ppt",
+      userId: state?.userId,
+      conversationId: state?.conversationId,
     });
+
     return {
       ...state,
       aiResponse: error?.response?.data?.message || error?.data?.message || '❌ Failed to generate PPT.'

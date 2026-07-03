@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { graph } from '../graph/graph.js';
 import { updateMemory } from '../config/memory.js';
+import { logError } from '../utils/logError.js';
 
 export const agent = async (req, res, next) => {
   try {
@@ -41,6 +42,12 @@ export const agent = async (req, res, next) => {
     });
 
   } catch (error) {
+    logError("Agent controller error", error, {
+      userId: req?.headers?.['x-user-id'] || '',
+      conversationId: req?.body?.conversationId,
+      agent: req?.body?.agent,
+    });
+
     next(error);
   }
 };
