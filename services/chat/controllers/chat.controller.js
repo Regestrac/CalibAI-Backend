@@ -1,10 +1,10 @@
 import Conversation from "../models/conversation.model.js";
 import Message from "../models/message.model.js";
+import { logError } from "../utils/logError.js";
 
 export const createConversation = async (req, res) => {
   try {
     const userId = req.headers["x-user-id"];
-    console.log('userId: ', userId);
 
     const conversation = await Conversation.create({
       userId,
@@ -12,6 +12,7 @@ export const createConversation = async (req, res) => {
 
     return res.status(200).json(conversation);
   } catch (error) {
+    logError("Create conversation error", error, { userId: req?.headers?.['x-user-id'] });
     return res.status(500).json({ message: `Create conversation error: ${error}` });
   }
 };
@@ -27,6 +28,7 @@ export const getConversations = async (req, res) => {
 
     return res.status(200).json(conversations);
   } catch (error) {
+    logError("Get conversations error", error, { userId: req?.headers?.['x-user-id'] });
     return res.status(500).json({ message: `Get conversations error: ${error}` });
   }
 };
@@ -39,6 +41,7 @@ export const updateConversation = async (req, res) => {
 
     return res.status(200).json(conversation);
   } catch (error) {
+    logError("Update conversation error", error, { id: req?.body?.id, userId: req?.headers?.['x-user-id'] });
     return res.status(500).json({ message: `Update conversation error: ${error}` });
   }
 };
@@ -57,6 +60,7 @@ export const saveMessage = async (req, res) => {
 
     return res.status(200).json(message);
   } catch (error) {
+    logError("Save message error", error, { conversationId: req?.body?.conversationId, role: req?.body?.role });
     return res.status(500).json({ message: `Save message error: ${error}` });
   }
 };
@@ -78,6 +82,7 @@ export const deleteConversation = async (req, res) => {
 
     return res.status(200).json({ message: "Conversation deleted" });
   } catch (error) {
+    logError("Delete conversation error", error, { id: req?.params?.id });
     return res.status(500).json({ message: `Delete conversation error: ${error}` });
   }
 };
@@ -91,6 +96,7 @@ export const getMessages = async (req, res) => {
 
     return res.status(200).json(messages);
   } catch (error) {
+    logError("Get messages error", error, { conversationId: req?.params?.conversationId });
     return res.status(500).json({ message: `Get messages error: ${error}` });
   }
 };
