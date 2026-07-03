@@ -3,6 +3,7 @@ import { PLANS } from "../config/plans.js";
 import razorpay from "../config/razorpay.js";
 import Payment from "../models/payment.model.js";
 import crypto from 'crypto';
+import { logError } from "../utils/logError.js";
 
 export const createOrder = async (req, res) => {
   try {
@@ -32,6 +33,7 @@ export const createOrder = async (req, res) => {
 
     return res.status(200).json({ order, plan: selectedPlan })
   } catch (error) {
+    logError("Create order error", error, { userId: req?.headers?.['x-user-id'], plan: req?.body?.plan });
     return res.status(500).json({ message: `Create order error: ${error}` })
   }
 };
@@ -62,6 +64,7 @@ export const verifyPayment = async (req, res) => {
 
     return res.status(200).json({ message: "Payment verified" });
   } catch (error) {
+    logError("Payment verification error", error, { razorpay_order_id: req?.body?.razorpay_order_id });
     return res.status(500).json({ message: `Payment verification error: ${error}` })
   }
 }
