@@ -7,8 +7,9 @@ import { logError } from "../utils/logError.js";
 const isRateLimitError = (error) => {
   let current = error;
   while (current) {
-    if (current?.name === "OpenRouterRateLimitError") return true;
+    if (current?.name === "OpenRouterRateLimitError" || current?.name === "OpenRouterError") return true;
     current = current?.cause || current?.error;
+    logError("Coding agent error with retry: ", current?.message)
   }
   return false;
 };
