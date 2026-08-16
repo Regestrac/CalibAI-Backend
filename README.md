@@ -19,41 +19,6 @@
 
 ---
 
-## 📹 Demo
-
-<!-- 
-===========================================================================
-PLACEHOLDER — APP WALKTHROUGH VIDEO
-===========================================================================
-Replace the comment block below with one of the following once the 
-screen recording is ready:
-
-Option A — GitHub-hosted video (drag & drop into the repo, e.g. /docs/demo.mp4):
-  <video src="docs/demo.mp4" controls width="100%" muted autoplay loop></video>
-
-Option B — YouTube / Loom embed:
-  [![CalibAI Walkthrough](https://img.shields.io/badge/🎬%20Watch-Workflow%20Walkthrough-red?style=for-the-badge)](https://www.youtube.com/watch?v=YOUR_VIDEO_ID)
-
-Option C — GIF:
-  ![CalibAI Walkthrough](docs/demo.gif)
-
-Suggested recording script (≈60–90s):
-  1. docker compose up redis → start gateway + 4 services
-  2. Sign in through the frontend → session cookie created in Redis
-  3. Send a coding prompt → LangGraph router dispatches to the coding agent
-  4. Artifact returned + persisted in Mongo; credits deducted
-  5. Upload a PDF → pdfRag chunks, embeds into Qdrant, answers from the doc
-  6. Razorpay test payment → plan upgrade propagates through auth → session
-===========================================================================
--->
-
-<div align="center">
-  <!-- 🎬 <b>Demo video coming soon.</b> -->
-  <i>Demo walkthrough coming soon.</i>
-</div>
-
----
-
 ## 🧭 Overview
 
 CalibAI Backend is the server side of **CalibAI** — an AI assistant with seven specialized agents. It is split into **five independently containerized Node.js services** behind a thin **API gateway**, so each domain (auth, chat, agent, billing) can be built, deployed, and scaled on its own.
